@@ -1,9 +1,10 @@
 name: Spring Boot CI
 
+# Run CI on push or pull request to master (or main)
 on:
   push:
     branches:
-      - master   # or 'main' if you use main
+      - master   # change to 'main' if your branch is main
   pull_request:
     branches:
       - master
@@ -13,11 +14,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout code
+      # Step 1: Checkout your code
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Step 2: Set up JDK 21
+      # Step 2: Set up Java 21
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
@@ -25,8 +26,12 @@ jobs:
           java-version: '21'
           cache: gradle
 
-      # Step 3: Build and run tests
+      # Step 3: Make gradlew executable (fixes Permission denied)
+      - name: Make Gradle wrapper executable
+        run: chmod +x ./gradlew
+
+      # Step 4: Build and run tests
       - name: Build and run tests
         run: ./gradlew clean build
-        # If your gradlew is inside a subfolder, add:
+        # If your Gradle project is in a subfolder, add:
         # working-directory: 16-products-category-api
